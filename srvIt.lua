@@ -1,7 +1,7 @@
 local srvCon = {}
 
 --Pin to be connected
-rpin=6
+rpin=7
 status="off"
 
 function Initsrv()

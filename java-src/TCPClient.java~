@@ -14,7 +14,7 @@ public class TCPClient
         {
                 System.out.println("Client Started...");
 
-                Socket socket = new Socket("127.0.0.1", 80);
+                Socket socket = new Socket("192.168.4.211", 80);
                 DataInputStream is = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
                 DataOutputStream os = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 

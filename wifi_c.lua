@@ -3,8 +3,8 @@ wcfg={}
 local srvCon = require('srvIt')
 
 --------------------- Wifi config ---------------------
-wcfg.ssid="" --Wifi SSID / Name Goes here
-wcfg.pwd="" --Wifi Password goes here
+wcfg.ssid="COLIVE STATIC IP" --Wifi SSID / Name Goes here
+wcfg.pwd="static@123" --Wifi Password goes here
 
 --wcfg.ssid="makk"
 --wcfg.pwd="password"
@@ -15,7 +15,7 @@ function connectTo()
     wifi.sta.config(wcfg)
     
     --Configure your static ip, netmas/dns and gateway below
-    ipcfg = {ip="192.168.4.211",netmask="255.255.255.0",gateway="192.168.4.1"}
+    ipcfg = {ip="192.168.0.120",netmask="255.255.255.0",gateway="192.168.0.1"}
 
     wifi.sta.setip(ipcfg)
     
