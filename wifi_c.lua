@@ -9,13 +9,15 @@ wcfg.pwd="static@123" --Wifi Password goes here
 --wcfg.ssid="makk"
 --wcfg.pwd="password"
 
+ipcfg = {ip="192.168.0.122",netmask="255.255.255.0",gateway="192.168.0.1"}
+
 function connectTo()
 
     wifi.setmode(wifi.STATION)
     wifi.sta.config(wcfg)
     
     --Configure your static ip, netmas/dns and gateway below
-    ipcfg = {ip="192.168.0.120",netmask="255.255.255.0",gateway="192.168.0.1"}
+    
 
     wifi.sta.setip(ipcfg)
     

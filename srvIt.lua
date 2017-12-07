@@ -1,12 +1,30 @@
-local srvCon = {}
+local srvCona = {}
 
 --Pin to be connected
 rpin=7
 status="off"
+--Initiating for the switch
+gpio.mode(5,gpio.INT)
+gpio.mode(6,gpio.OUTPUT)
+gpio.write(6,gpio.HIGH)
+gpio.mode(rpin,gpio.OUTPUT);
+
+T2mr = tmr.create()
+    T2mr:register(2000, tmr.ALARM_SINGLE,function()
+         gpio.write(5,gpio.LOW)
+    end)
+    
+    if not T2mr:start() then print("Err_") end
+    
+    gpio.trig(5,"up",function()
+        switch_it()
+    end)
 
 function Initsrv()
-    gpio.mode(rpin,gpio.OUTPUT);
+
+--Timer to switch set the switch to low after 2 Seconds
     srv=net.createServer(net.TCP)
+    
 end
 
 function listenIn()
@@ -17,23 +35,23 @@ function listenIn()
                 conn:send("On")
                 status="on"
               end
-         end
-         if payload=="off" then
+        end 
+        if payload=="off" then
               if (offit()) then
                 conn:send("Off")
                 status="off"
               end
-         end
-         if payload=="stat" then
+        end 
+        if payload=="stat" then
             conn:send(status)
-         end
+        end         
       end)
       conn:on("sent",function(conn) print("Sent") end)
     end)
 end
 
-srvCon.Initsrv = Initsrv
-srvCon.listenIn = listenIn
+srvCona.Initsrv = Initsrv
+srvCona.listenIn = listenIn
 
 function onit()
      gpio.write(rpin,gpio.HIGH)
@@ -49,4 +67,22 @@ function offit()
      end
 end
 
-return srvCon
+function switch_it(level,when)
+    Ttmr = tmr.create()
+    if offit() then
+        status="off"
+        print(status)
+    end
+    Ttmr:register(5000, tmr.ALARM_SINGLE,function()
+        if onit() then
+            status="on"
+            print(status)
+            gpio.write(5,gpio.LOW)
+        end
+    end)
+    if not Ttmr:start() then print("Err") end
+    print("Level :",level)
+    print("When :",when)        
+end
+
+return srvCona
