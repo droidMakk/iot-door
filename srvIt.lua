@@ -1,8 +1,8 @@
 local srvCona = {}
-
 --Pin to be connected
 rpin=7
-status="off"
+status="on"
+togstart="off"
 --Initiating for the switch
 gpio.mode(5,gpio.INT)
 gpio.mode(6,gpio.OUTPUT)
@@ -21,10 +21,11 @@ T2mr = tmr.create()
     end)
 
 function Initsrv()
-
---Timer to switch set the switch to low after 2 Seconds
     srv=net.createServer(net.TCP)
-    
+end
+
+function offsrv()
+    srv:close()
 end
 
 function listenIn()
@@ -50,6 +51,7 @@ function listenIn()
     end)
 end
 
+srvCona.offsrv = offsrv
 srvCona.Initsrv = Initsrv
 srvCona.listenIn = listenIn
 
@@ -80,9 +82,7 @@ function switch_it(level,when)
             gpio.write(5,gpio.LOW)
         end
     end)
-    if not Ttmr:start() then print("Err") end
-    print("Level :",level)
-    print("When :",when)        
+    if not Ttmr:start() then print("Err") end       
 end
 
 return srvCona
