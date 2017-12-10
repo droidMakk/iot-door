@@ -1,3 +1,4 @@
+local wrfl = require('wrfl')
 local srvCona = {}
 --Pin to be connected
 rpin=7
@@ -17,7 +18,10 @@ T2mr = tmr.create()
     if not T2mr:start() then print("Err_") end
     
     gpio.trig(5,"up",function()
-        switch_it()
+        if togstart=="off" then
+            switch_it()
+            togstart="on"
+        end
     end)
 
 function Initsrv()
@@ -31,21 +35,53 @@ end
 function listenIn()
     srv:listen(80,function(conn)
       conn:on("receive",function(conn,payload)
-        if payload=="on" then
+        if payload=="fc3a314493fc47f" then --on
               if (onit()) then
                 conn:send("On")
                 status="on"
               end
-        end 
-        if payload=="off" then
+        elseif payload=="a6cce86c323d0ea" then --off
               if (offit()) then
+                onaftr=tmr.create()
+                onaftr:register(5000, tmr.ALARM_SINGLE,function()
+                    if onit() then
+                        status="on"
+                        conn:send("auto-on")
+                    end
+                end)
+                onaftr:start()
                 conn:send("Off")
                 status="off"
               end
-        end 
-        if payload=="stat" then
+        elseif payload=="stat" then
             conn:send(status)
-        end         
+        else
+            stt=pcall(sjson.decode,payload)
+            if stt then
+                json =sjson.decode(payload)
+                if (json.ip and json.netmask and json.ssid and json.pwd and json.gateway and json.save) then
+                    print("IP : ",json.ip)
+                    print("NM : ",json.netmask)
+                    print("SSID : ",json.ssid)
+                    print("Pwd : ",json.pwd)
+                    print("GW : ",json.gateway)
+                    print("SV  : ",json.save)
+                    if wrfl.wrt(json) then 
+                        conn:send("written and restarting")
+                        restr=tmr.create()
+                        restr:register(2000,tmr.ALARM_SINGLE,function() node.restart() end)
+                        restr:start()
+                    else 
+                        conn:send("not written") 
+                    end
+                else
+                    conn:send("met")
+                    print("requirement not met")
+                end
+            else
+                conn:send("no json")
+            end
+        end
       end)
       conn:on("sent",function(conn) print("Sent") end)
     end)
@@ -78,6 +114,7 @@ function switch_it(level,when)
     Ttmr:register(5000, tmr.ALARM_SINGLE,function()
         if onit() then
             status="on"
+            togstart="off"
             print(status)
             gpio.write(5,gpio.LOW)
         end
