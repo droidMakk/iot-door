@@ -1,12 +1,17 @@
 const net = require('net');
 
-const client = net.createConnection({ port: 4000, host: "192.168.0.103" },function(){
+
+const client = net.createConnection({ port: 92, host: "localhost" },function(){
   console.log('connected to server!');
-  client.write('off');
+  client.write('update-json');
 });		
 
 client.on('data', (data) => {
-  console.log(data.toString());
+	msg=data.toString();
+	msg_json=JSON.parse(msg);
+	if(msg_json.status=="true"){
+		console.log(msg_json.url)
+	}
 });
 
 client.on('end', () => {
