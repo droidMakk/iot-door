@@ -40,13 +40,13 @@ function listenIn()
                 conn:send("On")
                 status="on"
               end
-        elseif payload=="a6cce86c323d0ea" then --off
+        elseif payload=="off" then --a6cce86c323d0ea
               if (offit()) then
                 onaftr=tmr.create()
                 onaftr:register(5000, tmr.ALARM_SINGLE,function()
                     if onit() then
                         status="on"
-                        conn:send("auto-on")
+--                        conn:send("auto-on")
                     end
                 end)
                 onaftr:start()
