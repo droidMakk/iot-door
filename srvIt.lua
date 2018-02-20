@@ -43,7 +43,7 @@ function listenIn()
         elseif payload=="off" then --a6cce86c323d0ea
               if (offit()) then
                 onaftr=tmr.create()
-                onaftr:register(5000, tmr.ALARM_SINGLE,function()
+                onaftr:register(2000, tmr.ALARM_SINGLE,function()
                     if onit() then
                         status="on"
 --                        conn:send("auto-on")
@@ -83,7 +83,7 @@ function listenIn()
             end
         end
       end)
-      conn:on("sent",function(conn) print("Sent") end)
+      conn:on("sent",function(conn)  end)
     end)
 end
 
@@ -110,8 +110,7 @@ function switch_it(level,when)
     if offit() then
         status="off"
         print(status)
-    end
-    Ttmr:register(5000, tmr.ALARM_SINGLE,function()
+        Ttmr:register(2000, tmr.ALARM_SINGLE,function()
         if onit() then
             status="on"
             togstart="off"
@@ -119,6 +118,7 @@ function switch_it(level,when)
             gpio.write(5,gpio.LOW)
         end
     end)
+    end
     if not Ttmr:start() then print("Err") end       
 end
 
