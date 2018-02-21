@@ -9,11 +9,11 @@
 > * Configure mqtt broker name in **mqtt_hl.lua**
 
 
->Note That TCP server at 85 is under construction
->Server Type| Port
->-|-
->TCP : Handling|82
-><del>TCP : Update</del> | <del>85</del>
+Note That TCP server at 85 is under construction
+Server Type| Port
+-|-
+TCP : Handling|82
+<del>TCP : Update</del> | <del>85</del>
 
 
 Send this following JSON payload to TCP Server at **Port 82**
