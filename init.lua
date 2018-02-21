@@ -1,3 +1,5 @@
-local wicon = require('wifi_c')
+c2wifi = require('c2wifi')
+srv=require('srv')
 
-wicon.connectTo()
+c2wifi.ctowifi()
+srv.listen()
