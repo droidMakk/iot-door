@@ -1,30 +1,40 @@
-Add your Wifi Name and Password in wifi_c.lua file. Marked!
+### IoT : Door Controller
+---
 
-SSID & Password in wifi_c.lua
 
-Configure static ip address, netmask and gateway in wifi_c.lua
-file.
+##### Follow below steps to configure nodemcu :
+> * add your **wifi/gateway** configuration in **config.lua** file
+> * Including your IP configuration
+> * DNS is default at _255.255.255.0_
+> * Configure mqtt broker name in **mqtt_hl.lua**
 
-Ip : 192.168.4.211
-Gateway : 192.168.4.1
-Netmask : 255.255.255.0
 
-You can find the specifics marked what to put where.
+>Note That TCP server at 85 is under construction
+>Server Type| Port
+>-|-
+>TCP : Handling|82
+><del>TCP : Update</del> | <del>85</del>
 
-Once the code is pushed to device restart or reset the device.
 
-It'll start a server to which you can send the following request to
-control if any relay connected to a specific port
+Send this following JSON payload to TCP Server at **Port 82**
+```javascript
+{
+	"ssid":"Gateway/Hotspot name",
+	"pwd":"Gateway's password",
+	"save":"true",
+	"ip":"Device's ip address",
+	"netmask":"255.255.255.0",
+	"gateway":"Gateway's internal ip address"
+}
+```
 
-The request must be in TCP format on top of which HTTP sits.
 
 The following request can be made to control or know the status of
 the device
 
---------------------------
  Request | Action
---------------------------
- "on"    | Switch on
+ -|-
  "off"   | Switch off
  "stat"  | Status (on/off)
---------------------------
+
+Automatically switches on after two seconds 
